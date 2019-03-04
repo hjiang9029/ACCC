@@ -1,5 +1,6 @@
 package com.github.hjiang9029.accc;
 
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -20,11 +21,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+
+
+
     }
 
 
@@ -47,7 +55,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(newWest).title("Marker in New West"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(49.213638, -122.910427)).title("Ending"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(newWest));
-        mMap.setMinZoomPreference(15);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newWest, 15));
+        mMap.getUiSettings().setZoomControlsEnabled(true);
 
         Polyline polyline1 = googleMap.addPolyline(new PolylineOptions()
                 .clickable(true)
@@ -60,4 +69,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .alpha(0.7f));
 
     }
+
+
+
+
+
 }

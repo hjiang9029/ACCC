@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    HashMap<String, Park> parks = new HashMap<String, Park>();
+    HashMap<String, Park> parks = new HashMap<>();
     private String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private ListView lv;
