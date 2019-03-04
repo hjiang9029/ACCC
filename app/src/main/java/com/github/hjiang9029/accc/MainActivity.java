@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    HashMap<String, Park> parks = new HashMap<>();
+    public static HashMap<String, Park> parks = new HashMap<>();
     private String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private ListView lv;
@@ -67,15 +67,28 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray parkJsonArray = parkJsonObj.getJSONArray("features");
                     // looping through All Contacts
                     for (int i = 0; i < parkJsonArray.length(); i++) {
+
+                        if (i == 12) {
+                            i = 13;
+                        }
                         JSONObject c = parkJsonArray.getJSONObject(i);
                         JSONObject props = c.getJSONObject("properties");
-                        JSONObject features = c.getJSONObject("features");
+                        JSONObject geometry = c.getJSONObject("geometry");
+                        JSONArray coordArray = geometry.getJSONArray("coordinates");
+                        JSONArray coordArray1 = coordArray.getJSONArray(0);
+                        JSONArray latlongArray = coordArray1.getJSONArray(0);
                         String name = props.getString("Name");
-                        String address = props.getString("StrNum" + " " + "StrName");
+                        String street = props.getString("StrNum");
+                        String avenue = props.getString("StrName");
+                        String address = street + " " + avenue;
                         String category = props.getString("Category");
                         String neighbourhood = props.getString("Neighbourhood");
-                        double latitude = features.getInt("coordinates[0]");
-                        double longitude = features.getInt("coordinates[0]");
+                        //String[] strLatLong = latlongArray.getString(0).split(",");
+                        //double latitude = Double.parseDouble(latlongArray.getString(0));
+                        //double longitude = Double.parseDouble(latlongArray.getString(1));
+                        double latitude = latlongArray.getDouble(0);
+                        double longitude = latlongArray.getDouble(1);
+
 
                         parkNames.add(name);
                         Park parkObject = new Park(name, address, category, neighbourhood, latitude, longitude);
@@ -131,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void createMap(View view) {
-        Intent i = new Intent(this, MapsActivity.class);
+        Intent i = new Intent(this, NavActivity.class);
 
         startActivity(i);
     }

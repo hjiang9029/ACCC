@@ -40,6 +40,11 @@ public class NavActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Menu menu = navigationView.getMenu();
+        for (Park p : MainActivity.parks.values()) {
+            menu.add(p.getName());
+        }
     }
 
     @Override
