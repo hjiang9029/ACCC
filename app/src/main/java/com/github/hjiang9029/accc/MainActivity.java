@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void createMap(View view) {
-        Intent i = new Intent(this, NavActivity.class);
+        Intent i = new Intent(this, MapsActivity.class);
 
         startActivity(i);
     }
