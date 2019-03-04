@@ -13,10 +13,14 @@ import android.widget.Toast;
 
 import org.json.*;
 
+import java.io.Console;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    HashMap<String, Park> parks = new HashMap<String, Park>();
     private String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private ListView lv;
@@ -65,8 +69,17 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < parkJsonArray.length(); i++) {
                         JSONObject c = parkJsonArray.getJSONObject(i);
                         JSONObject props = c.getJSONObject("properties");
+                        JSONObject features = c.getJSONObject("features");
                         String name = props.getString("Name");
+                        String address = props.getString("StrNum" + " " + "StrName");
+                        String category = props.getString("Category");
+                        String neighbourhood = props.getString("Neighbourhood");
+                        double latitude = features.getInt("coordinates[0]");
+                        double longitude = features.getInt("coordinates[0]");
+
                         parkNames.add(name);
+                        Park parkObject = new Park(name, address, category, neighbourhood, latitude, longitude);
+                        parks.put(parkObject.getName(), parkObject);
 
                     }
                 } catch (final JSONException e) {
@@ -118,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void createMap(View view) {
-        Intent i = new Intent(this, NavActivity.class);
+        Intent i = new Intent(this, MapsActivity.class);
+
         startActivity(i);
     }
 
