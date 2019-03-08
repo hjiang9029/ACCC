@@ -8,15 +8,14 @@
     tools:context=".NavActivity"
     tools:showIn="@layout/app_bar_nav">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
+
+    <LinearLayout
+        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="29dp"
-        tools:layout_editor_absoluteY="31dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical">
+    </LinearLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>
