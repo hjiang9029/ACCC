@@ -30,14 +30,14 @@ public class MainActivity extends AppCompatActivity {
     private ListView lv;
     // URL to get contacts JSON
     private static String SERVICE_URL = "http://opendata.newwestcity.ca/downloads/parks/PARKS.json";
-    ArrayList<String> parkNames = new ArrayList<String>();
+    public static ArrayList<String> parkNames = new ArrayList<String>();
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        lv = (ListView) findViewById(R.id.nameList);
+        //lv = (ListView) findViewById(R.id.nameList);
         new GetContacts().execute();
     }
 
@@ -138,12 +138,6 @@ public class MainActivity extends AppCompatActivity {
             if (pDialog.isShowing())
                 pDialog.dismiss();
 
-            //Toon[] toonArray = toonList.toArray(new Toon[toonList.size()]);
-
-            ArrayAdapter<String> strAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, parkNames);
-
-            // Attach the adapter to a ListView
-            lv.setAdapter(strAdapter);
         }
     }
 
