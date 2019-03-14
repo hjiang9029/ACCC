@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">ACCC</string>
     <string name="api_key">AIzaSyCdEKLwjKJ0ubzQlQx71Wg9KxgIcY43cXw</string>
+    <string name="welcome">Where are you exploring today?</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_nav">NavActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
