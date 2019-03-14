@@ -26,6 +26,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -151,14 +153,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if (currentLocation != null) {
                                 markerLatlng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                                 mMap.addMarker(new MarkerOptions().position(markerLatlng).title("Marker"));
+                                addMarkers();
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
                             } else {
                                 markerLatlng = new LatLng(49.201354, -122.912716);
                                 mMap.addMarker(new MarkerOptions().position(markerLatlng).title("Marker"));
+                                addMarkers();
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
                             }
+                            // Code to create a hardcoded route, only uncomment to test when necessary $$$
+                            /*
                             LatLng origin = markerLatlng;
                             LatLng dest = new LatLng(49.210838475275544, -122.90167911202795);
 
@@ -169,6 +175,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                             // Start downloading json data from Google Directions API
                             downloadTask.execute(url);
+                            */
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
                         }
@@ -177,6 +184,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         } catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: Security exception: " + e.getMessage());
+        }
+    }
+
+    private void addMarkers() {
+        for (Park p : MainActivity.parks.values()) {
+            LatLng parkLatLng = new LatLng(p.getLatitude(), p.getLongitude());
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(parkLatLng);
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+            mMap.addMarker(markerOptions);
         }
     }
 

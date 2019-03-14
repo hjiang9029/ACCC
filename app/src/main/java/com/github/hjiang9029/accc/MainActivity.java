@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
                         //String[] strLatLong = latlongArray.getString(0).split(",");
                         //double latitude = Double.parseDouble(latlongArray.getString(0));
                         //double longitude = Double.parseDouble(latlongArray.getString(1));
-                        double latitude = latlongArray.getDouble(0);
-                        double longitude = latlongArray.getDouble(1);
+                        double latitude = latlongArray.getDouble(1);
+                        double longitude = latlongArray.getDouble(0);
 
 
                         parkNames.add(name);
