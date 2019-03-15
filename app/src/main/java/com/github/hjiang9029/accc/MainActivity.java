@@ -32,6 +32,8 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     public static HashMap<String, Park> parks = new HashMap<>();
+    private double SEARCHED_LAT = 0.0;
+    private double SEARCHED_LONG = 0.0;
     private String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private ListView lv;
@@ -65,13 +67,15 @@ public class MainActivity extends AppCompatActivity {
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
-
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG));
+        autocompleteFragment.setCountry("CA");
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                SEARCHED_LAT = place.getLatLng().latitude;
+                SEARCHED_LONG = place.getLatLng().longitude;
             }
 
             @Override
@@ -186,6 +190,8 @@ public class MainActivity extends AppCompatActivity {
     public void createMap(View view) {
         if (isServicesOK()) {
             Intent i = new Intent(this, MapsActivity.class);
+            i.putExtra("SEARCHED_LAT", SEARCHED_LAT);
+            i.putExtra("SEARCHED_LONG", SEARCHED_LONG);
             startActivity(i);
         }
     }

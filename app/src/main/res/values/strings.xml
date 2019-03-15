@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">ACCC</string>
-    <string name="test">TEST</string>
     <string name="api_key">AIzaSyCdEKLwjKJ0ubzQlQx71Wg9KxgIcY43cXw</string>
     <string name="welcome">Where are you exploring today?</string>
     <string name="title_activity_maps">Map</string>
