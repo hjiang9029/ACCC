@@ -29,7 +29,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,7 +37,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
@@ -58,6 +56,11 @@ import java.util.List;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "MapsActivity";
+
+    // Switches for whether the respective locations are marked
+    // add as needed
+    private boolean parkSetting = true;
+    private boolean washroomSetting = true;
 
     //#region Permissions
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -188,13 +191,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if (currentLocation != null) {
                                 markerLatlng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                                 mMap.addMarker(new MarkerOptions().position(markerLatlng).title("Marker"));
-                                addMarkers();
+                                addMarkers(markerLatlng);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
                             } else {
                                 markerLatlng = new LatLng(49.201354, -122.912716);
                                 mMap.addMarker(new MarkerOptions().position(markerLatlng).title("Marker"));
-                                addMarkers();
+                                addMarkers(markerLatlng);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
                             }
@@ -222,13 +225,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void addMarkers() {
-        for (Park p : MainActivity.parks.values()) {
-            LatLng parkLatLng = new LatLng(p.getLatitude(), p.getLongitude());
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(parkLatLng);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-            mMap.addMarker(markerOptions);
+    private void addMarkers(LatLng origin) {
+        if (parkSetting) {
+            for (Park p : MainActivity.PARKS.values()) {
+                if (haversine(origin.latitude, p.latitude, origin.longitude, p.longitude) < (double) 1000) {
+                    LatLng parkLatLng = new LatLng(p.getLatitude(), p.getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(parkLatLng);
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    mMap.addMarker(markerOptions);
+                }
+            }
+        }
+        if (washroomSetting) {
+            for (Washroom w : MainActivity.WASHROOMS.values()) {
+                if (haversine(origin.latitude, w.latitude, origin.longitude, w.longitude) < (double) 1000) {
+                    LatLng washroomLatLng = new LatLng(w.getLatitude(), w.getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(washroomLatLng);
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+                    mMap.addMarker(markerOptions);
+                }
+            }
         }
     }
 
@@ -423,5 +441,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // Drawing polyline in the Google Map for the i-th route
             mMap.addPolyline(lineOptions);
         }
+    }
+
+    /**
+     * Calculate distance between two points in latitude and longitude
+     * Uses Haversine method as its base.
+     *
+     * lat1, lon1 Start point lat2, lon2 End point
+     * @returns Distance in Meters
+     */
+    public static double haversine(double lat1, double lat2, double lon1,
+                                  double lon2) {
+
+        final int R = 6371; // Radius of the earth
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+
+        distance = Math.pow(distance, 2);
+
+        return Math.sqrt(distance);
     }
 }

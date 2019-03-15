@@ -9,8 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,15 +23,14 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 
 import org.json.*;
 
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static HashMap<String, Park> parks = new HashMap<>();
+    public static HashMap<String, Park> PARKS = new HashMap<>();
+    public static HashMap<String, Washroom> WASHROOMS = new HashMap<>();
     private double SEARCHED_LAT = 0.0;
     private double SEARCHED_LONG = 0.0;
     private String TAG = MainActivity.class.getSimpleName();
@@ -41,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView lv;
     // URL to get contacts JSON
     private static String SERVICE_URL = "http://opendata.newwestcity.ca/downloads/parks/PARKS.json";
+    private static String WASHROOM_URL = "http://opendata.newwestcity.ca/downloads/accessible-public-washrooms/WASHROOMS.json";
     public static ArrayList<String> parkNames = new ArrayList<String>();
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
@@ -101,7 +99,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... arg0) {
             HttpHandler sh = new HttpHandler();
+            parseParks(sh);
+            parseWashrooms(sh);
+            return null;
+        }
 
+        private void parseParks(HttpHandler sh) {
             // Making a request to url and getting response
             String jsonStr = sh.makeServiceCall(SERVICE_URL);
 
@@ -141,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
                         parkNames.add(name);
                         Park parkObject = new Park(name, address, category, neighbourhood, latitude, longitude);
-                        parks.put(parkObject.getName(), parkObject);
+                        PARKS.put(parkObject.getName(), parkObject);
 
                     }
                 } catch (final JSONException e) {
@@ -170,8 +173,66 @@ public class MainActivity extends AppCompatActivity {
                 });
 
             }
+        }
 
-            return null;
+        private void parseWashrooms(HttpHandler sh) {
+            // Making a request to url and getting response
+            String jsonStr = sh.makeServiceCall(WASHROOM_URL);
+
+            Log.e(TAG, "Response from url: " + jsonStr);
+
+            if (jsonStr != null) {
+                try {
+                    //JSONObject jsonObj = new JSONObject(jsonStr);
+
+                    // Getting JSON Array node
+                    JSONObject washroomJsonObj = new JSONObject(jsonStr);
+                    JSONArray washroomJsonArray = washroomJsonObj.getJSONArray("features");
+                    // looping through All Contacts
+                    for (int i = 0; i < washroomJsonArray.length(); i++) {
+
+                        JSONObject c = washroomJsonArray.getJSONObject(i);
+                        JSONObject props = c.getJSONObject("properties");
+                        JSONObject geometry = c.getJSONObject("geometry");
+                        JSONArray coordArray = geometry.getJSONArray("coordinates");
+                        String name = props.getString("Name");
+                        String address = props.getString("Address");
+                        String category = props.getString("Category");
+                        String neighbourhood = props.getString("Neighbourhood");
+                        String hours = props.getString("Hours");
+                        double latitude = coordArray.getDouble(1);
+                        double longitude = coordArray.getDouble(0);
+
+                        Washroom newWashroom = new Washroom(name, address, category, neighbourhood, hours, latitude, longitude);
+                        WASHROOMS.put(newWashroom.getName(), newWashroom);
+
+                    }
+                } catch (final JSONException e) {
+                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+
+                }
+            } else {
+                Log.e(TAG, "Couldn't get json from server.");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+
+            }
         }
 
         @Override
