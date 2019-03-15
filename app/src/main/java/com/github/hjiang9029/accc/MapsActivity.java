@@ -199,18 +199,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
                             }
                             // Code to create a hardcoded route, only uncomment to test when necessary $$$
-                            /*
-                            LatLng origin = markerLatlng;
-                            LatLng dest = new LatLng(SEARCHED_LAT, SEARCHED_LONG);
+//
+//                            LatLng origin = markerLatlng;
+//                            LatLng dest = new LatLng(SEARCHED_LAT, SEARCHED_LONG);
+//
+//                            // Getting URL to the Google Directions API
+//                            String url = createRoute(origin, dest);
+//
+//                            DownloadTask downloadTask = new DownloadTask();
+//
+//                            // Start downloading json data from Google Directions API
+//                            downloadTask.execute(url);
 
-                            // Getting URL to the Google Directions API
-                            String url = createRoute(origin, dest);
-
-                            DownloadTask downloadTask = new DownloadTask();
-
-                            // Start downloading json data from Google Directions API
-                            downloadTask.execute(url);
-                            */
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
                         }
