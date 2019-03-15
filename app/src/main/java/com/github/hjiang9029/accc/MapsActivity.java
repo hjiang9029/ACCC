@@ -57,6 +57,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final String TAG = "MapsActivity";
 
+    // Switches for whether the respective locations are marked
+    // add as needed
+    private boolean parkSetting = true;
+    private boolean washroomSetting = true;
+
     //#region Permissions
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -221,22 +226,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void addMarkers(LatLng origin) {
-        for (Park p : MainActivity.PARKS.values()) {
-            if (haversine(origin.latitude, p.latitude, origin.longitude, p.longitude) < (double) 1000) {
-                LatLng parkLatLng = new LatLng(p.getLatitude(), p.getLongitude());
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(parkLatLng);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                mMap.addMarker(markerOptions);
+        if (parkSetting) {
+            for (Park p : MainActivity.PARKS.values()) {
+                if (haversine(origin.latitude, p.latitude, origin.longitude, p.longitude) < (double) 1000) {
+                    LatLng parkLatLng = new LatLng(p.getLatitude(), p.getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(parkLatLng);
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    mMap.addMarker(markerOptions);
+                }
             }
         }
-        for (Washroom w : MainActivity.WASHROOMS.values()) {
-            if (haversine(origin.latitude, w.latitude, origin.longitude, w.longitude) < (double) 1000) {
-                LatLng washroomLatLng = new LatLng(w.getLatitude(), w.getLongitude());
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(washroomLatLng);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
-                mMap.addMarker(markerOptions);
+        if (washroomSetting) {
+            for (Washroom w : MainActivity.WASHROOMS.values()) {
+                if (haversine(origin.latitude, w.latitude, origin.longitude, w.longitude) < (double) 1000) {
+                    LatLng washroomLatLng = new LatLng(w.getLatitude(), w.getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(washroomLatLng);
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+                    mMap.addMarker(markerOptions);
+                }
             }
         }
     }
