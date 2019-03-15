@@ -28,21 +28,33 @@
         android:background="@drawable/round_corners"
         android:textColor="#fff"
         android:text="@string/welcome"/>
-         />
 
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
+
+    <fragment
+        android:id="@+id/autocomplete_fragment"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_marginTop="150dp"
         android:layout_alignTop="@id/welcome"
-        android:layout_centerInParent="true"
-        android:textColor="#fff"
-        android:hint="Search a location..."
-        android:textColorHint="#fff"
-        android:inputType="textPersonName" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:name=
+            "com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        />
+
+
+    <!--<EditText-->
+        <!--android:id="@+id/editText"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:ems="10"-->
+        <!--android:layout_marginTop="150dp"-->
+        <!--android:layout_alignTop="@id/welcome"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:textColor="#fff"-->
+        <!--android:hint="Search a location..."-->
+        <!--android:textColorHint="#fff"-->
+        <!--android:inputType="textPersonName" />-->
 
     <Button
         android:id="@+id/button"
@@ -50,8 +62,8 @@
         android:layout_height="wrap_content"
         android:text="Start"
         android:onClick="createMap"
-        android:layout_marginTop="50dp"
-        android:layout_alignTop="@id/editText"
+        android:layout_marginTop="60dp"
+        android:layout_alignTop="@id/autocomplete_fragment"
         android:layout_centerInParent="true"
         android:layout_gravity="right"/>
 
