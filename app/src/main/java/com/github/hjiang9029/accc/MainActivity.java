@@ -14,17 +14,26 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import org.json.*;
 
 import java.io.Console;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     public static HashMap<String, Park> parks = new HashMap<>();
+    private double SEARCHED_LAT = 0.0;
+    private double SEARCHED_LONG = 0.0;
     private String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private ListView lv;
@@ -39,6 +48,42 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //lv = (ListView) findViewById(R.id.nameList);
         new GetContacts().execute();
+
+        // Initialize Places.
+        Places.initialize(getApplicationContext(), getString(R.string.api_key));
+
+        // Create a new Places client instance.
+        PlacesClient placesClient = Places.createClient(this);
+
+        /**
+         * Initialize Places. For simplicity, the API key is hard-coded. In a production
+         * environment we recommend using a secure mechanism to manage API keys.
+         */
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), "YOUR_API_KEY");
+        }
+
+        // Initialize the AutocompleteSupportFragment.
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG));
+        autocompleteFragment.setCountry("CA");
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                SEARCHED_LAT = place.getLatLng().latitude;
+                SEARCHED_LONG = place.getLatLng().longitude;
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
     }
 
     private class GetContacts extends AsyncTask<Void, Void, Void> {
@@ -145,6 +190,8 @@ public class MainActivity extends AppCompatActivity {
     public void createMap(View view) {
         if (isServicesOK()) {
             Intent i = new Intent(this, MapsActivity.class);
+            i.putExtra("SEARCHED_LAT", SEARCHED_LAT);
+            i.putExtra("SEARCHED_LONG", SEARCHED_LONG);
             startActivity(i);
         }
     }

@@ -66,6 +66,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final float DEFAULT_ZOOM = 15f;
+    private static double SEARCHED_LAT;
+    private static double SEARCHED_LONG;
     //#endregion
 
     @Override
@@ -85,6 +87,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             drawer.addDrawerListener(toggle);
         }
         toggle.syncState();
+
+        // Assign the extra variables
+        SEARCHED_LAT = getIntent().getDoubleExtra("SEARCHED_LAT", 0.0);
+        SEARCHED_LONG = getIntent().getDoubleExtra("SEARCHED_LONG", 0.0);
 
         // Adding to the sidebar
         ListView lv = (ListView) findViewById(R.id.list_drawer);
@@ -157,18 +163,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 mMap.addMarker(new MarkerOptions().position(markerLatlng).title("Marker"));
                                 addMarkers();
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
-                                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                                mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
                             } else {
                                 markerLatlng = new LatLng(49.201354, -122.912716);
                                 mMap.addMarker(new MarkerOptions().position(markerLatlng).title("Marker"));
                                 addMarkers();
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
-                                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                                mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
                             }
                             // Code to create a hardcoded route, only uncomment to test when necessary $$$
                             /*
                             LatLng origin = markerLatlng;
-                            LatLng dest = new LatLng(49.210838475275544, -122.90167911202795);
+                            LatLng dest = new LatLng(SEARCHED_LAT, SEARCHED_LONG);
 
                             // Getting URL to the Google Directions API
                             String url = createRoute(origin, dest);
