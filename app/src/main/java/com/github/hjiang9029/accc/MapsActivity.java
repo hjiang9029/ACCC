@@ -29,7 +29,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,7 +37,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
@@ -223,12 +221,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void addMarkers(LatLng origin) {
-        for (Park p : MainActivity.parks.values()) {
+        for (Park p : MainActivity.PARKS.values()) {
             if (haversine(origin.latitude, p.latitude, origin.longitude, p.longitude) < (double) 1000) {
                 LatLng parkLatLng = new LatLng(p.getLatitude(), p.getLongitude());
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(parkLatLng);
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                mMap.addMarker(markerOptions);
+            }
+        }
+        for (Washroom w : MainActivity.WASHROOMS.values()) {
+            if (haversine(origin.latitude, w.latitude, origin.longitude, w.longitude) < (double) 1000) {
+                LatLng washroomLatLng = new LatLng(w.getLatitude(), w.getLongitude());
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(washroomLatLng);
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
                 mMap.addMarker(markerOptions);
             }
         }
