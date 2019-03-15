@@ -54,6 +54,8 @@ public class NavActivity extends AppCompatActivity
         for (Park p : MainActivity.parks.values()) {
           //  menu.add(p.getName());
         }
+
+
     }
 
     @Override
