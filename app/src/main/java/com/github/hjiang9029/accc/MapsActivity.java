@@ -188,13 +188,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if (currentLocation != null) {
                                 markerLatlng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                                 mMap.addMarker(new MarkerOptions().position(markerLatlng).title("Marker"));
-                                addMarkers();
+                                addMarkers(markerLatlng);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
                             } else {
                                 markerLatlng = new LatLng(49.201354, -122.912716);
                                 mMap.addMarker(new MarkerOptions().position(markerLatlng).title("Marker"));
-                                addMarkers();
+                                addMarkers(markerLatlng);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
                             }
@@ -222,13 +222,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void addMarkers() {
+    private void addMarkers(LatLng origin) {
         for (Park p : MainActivity.parks.values()) {
-            LatLng parkLatLng = new LatLng(p.getLatitude(), p.getLongitude());
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(parkLatLng);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-            mMap.addMarker(markerOptions);
+            if (haversine(origin.latitude, p.latitude, origin.longitude, p.longitude) < (double) 1000) {
+                LatLng parkLatLng = new LatLng(p.getLatitude(), p.getLongitude());
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(parkLatLng);
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                mMap.addMarker(markerOptions);
+            }
         }
     }
 
@@ -423,5 +425,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // Drawing polyline in the Google Map for the i-th route
             mMap.addPolyline(lineOptions);
         }
+    }
+
+    /**
+     * Calculate distance between two points in latitude and longitude
+     * Uses Haversine method as its base.
+     *
+     * lat1, lon1 Start point lat2, lon2 End point
+     * @returns Distance in Meters
+     */
+    public static double haversine(double lat1, double lat2, double lon1,
+                                  double lon2) {
+
+        final int R = 6371; // Radius of the earth
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+
+        distance = Math.pow(distance, 2);
+
+        return Math.sqrt(distance);
     }
 }
