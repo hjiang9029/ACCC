@@ -95,11 +95,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         getLocationPermission();
         initializeAutoCompleteSearch();
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.getUiSettings().setZoomControlsEnabled(true);
         if (mLocationPermissionGranted) {
             mMap.setMyLocationEnabled(true);
             getDeviceLocation();
