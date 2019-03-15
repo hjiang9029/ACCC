@@ -37,7 +37,6 @@
         android:layout_alignTop="@id/welcome"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="150dp"
-
         android:name=
             "com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         />
@@ -48,7 +47,8 @@
         android:layout_height="wrap_content"
         android:text="Start"
         android:onClick="createMap"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="20dp"
         android:layout_alignTop="@id/autocomplete_fragment"
         android:layout_centerInParent="true"
         android:layout_gravity="right"/>
