@@ -250,7 +250,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(washroomLatLng);
                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
-                    mMap.addMarker(markerOptions);
+                    washroomsMarkers.add(mMap.addMarker(markerOptions));
                 }
             }
         }

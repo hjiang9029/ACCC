@@ -26,20 +26,15 @@ public class Settings extends AppCompatActivity {
     }
 
     public void saveButton(View view) {
-        /*
-        Intent i = new Intent(this, MapsActivity.class);
-        i.putExtra("parks", parkBox.isChecked());
-        i.putExtra("washrooms", washroomBox.isChecked());
-        i.putExtra("fountains", fountainBox.isChecked());
-        startActivity(i);
-        */
-        // Not sure if using an intent here is the right way to do this, as if we press "back" it'd redirect back to settings
-        // But i'll leave the intent function here just in case.
-        // TODO: Maybe set static variables in MapsActivity? Not sure.
         MapsActivity.parkSetting = parkBox.isChecked();
         for (Marker m : MapsActivity.parkMarkers) {
             m.setVisible(parkBox.isChecked());
         }
-        // And so on..
+        for (Marker m : MapsActivity.washroomsMarkers) {
+            m.setVisible(washroomBox.isChecked());
+        }
+        MapsActivity.parkSetting = parkBox.isChecked();
+        MapsActivity.washroomSetting = washroomBox.isChecked();
+        finish();
     }
 }
