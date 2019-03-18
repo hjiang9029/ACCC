@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
             HttpHandler sh = new HttpHandler();
             parseParks(sh);
             parseWashrooms(sh);
+            parseFountains(sh);
+            parseParkStructures(sh);
             return null;
         }
 

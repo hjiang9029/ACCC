@@ -62,9 +62,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // add as needed
     public static boolean parkSetting = true;
     public static boolean washroomSetting = true;
+    public static boolean parkStructuresSetting = true;
+    public static boolean waterFountainSetting = true;
+
     public static ArrayList<Marker> parkMarkers = new ArrayList<>();
     public static ArrayList<Marker> washroomsMarkers = new ArrayList<>();
     public static ArrayList<String> filteredParks = new ArrayList<>();
+    public static ArrayList<Marker> parkStructureMarkers = new ArrayList<>();
+    public static ArrayList<Marker> waterFountainMarkers = new ArrayList<>();
 
     //#region Permissions
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -128,6 +133,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Intent h = new Intent(getBaseContext(), Settings.class);
             h.putExtra("parks", parkSetting);
             h.putExtra("washrooms", washroomSetting);
+            h.putExtra("fountains", waterFountainSetting);
+            h.putExtra("parkstruct", parkStructuresSetting);
             startActivity(h);
             return true;
         }
@@ -193,13 +200,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if (currentLocation != null) {
                                 markerLatlng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                                 mMap.addMarker(new MarkerOptions().position(markerLatlng).title("Marker"));
-                                addMarkers(markerLatlng);
+                                addCloseMarkers(markerLatlng);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
                             } else {
                                 markerLatlng = new LatLng(49.201354, -122.912716);
                                 mMap.addMarker(new MarkerOptions().position(markerLatlng).title("Marker"));
-                                addMarkers(markerLatlng);
+                                addCloseMarkers(markerLatlng);
                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
                             }
@@ -227,10 +234,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void addMarkers(LatLng origin) {
 
+       
+
+
+
+    private void addCloseMarkers(LatLng origin) {
+        
         // Adding to the sidebar
-        ListView lv = (ListView) findViewById(R.id.list_drawer);
+         ListView lv = (ListView) findViewById(R.id.list_drawer);
 
         for (Park p : MainActivity.PARKS.values()) {
             if (haversine(origin.latitude, p.latitude, origin.longitude, p.longitude) < (double) 1000) {
@@ -242,9 +254,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 android.R.layout.simple_list_item_1,
                 MapsActivity.filteredParks);
         lv.setAdapter(adapter);
-
-
-
         if (parkSetting) {
             for (Park p : MainActivity.PARKS.values()) {
                 if (haversine(origin.latitude, p.latitude, origin.longitude, p.longitude) < (double) 1000) {
@@ -264,6 +273,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     markerOptions.position(washroomLatLng);
                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
                     washroomsMarkers.add(mMap.addMarker(markerOptions));
+                }
+            }
+        }
+        if (parkStructuresSetting) {
+            for (ParkStructure ps : MainActivity.PARKSTRUCTURES.values()) {
+                if (haversine(origin.latitude, ps.latitude, origin.longitude, ps.longitude) < (double) 1000) {
+                    LatLng washroomLatLng = new LatLng(ps.getLatitude(), ps.getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(washroomLatLng);
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                    parkStructureMarkers.add(mMap.addMarker(markerOptions));
+                }
+            }
+        }
+        if (waterFountainSetting) {
+            for (DrinkingFountain df : MainActivity.DRINKINGFOUNTAINS.values()) {
+                if (haversine(origin.latitude, df.latitude, origin.longitude, df.longitude) < (double) 1000) {
+                    LatLng washroomLatLng = new LatLng(df.getLatitude(), df.getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(washroomLatLng);
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
+                    waterFountainMarkers.add(mMap.addMarker(markerOptions));
                 }
             }
         }

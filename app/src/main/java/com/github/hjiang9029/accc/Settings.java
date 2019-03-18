@@ -13,6 +13,7 @@ public class Settings extends AppCompatActivity {
     private CheckBox parkBox;
     private CheckBox washroomBox;
     private CheckBox fountainBox;
+    private CheckBox parkStructureBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +22,12 @@ public class Settings extends AppCompatActivity {
         Intent i = getIntent();
         parkBox = (CheckBox) findViewById(R.id.chkPark);
         washroomBox = (CheckBox) findViewById(R.id.washrooms);
+        fountainBox = (CheckBox) findViewById(R.id.chkWindows);
+        parkStructureBox = (CheckBox) findViewById(R.id.chkParkStructure);
         parkBox.setChecked(i.getBooleanExtra("parks", true));
         washroomBox.setChecked(i.getBooleanExtra("washrooms", true));
+        fountainBox.setChecked(i.getBooleanExtra("fountains", true));
+        parkStructureBox.setChecked(i.getBooleanExtra("parkstruct", true));
     }
 
     public void saveButton(View view) {
@@ -35,6 +40,8 @@ public class Settings extends AppCompatActivity {
         }
         MapsActivity.parkSetting = parkBox.isChecked();
         MapsActivity.washroomSetting = washroomBox.isChecked();
+        MapsActivity.waterFountainSetting = fountainBox.isChecked();
+        MapsActivity.parkStructuresSetting = parkStructureBox.isChecked();
         finish();
     }
 }
