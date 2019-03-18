@@ -145,12 +145,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
         if (mLocationPermissionGranted) {
-            mMap.setMyLocationEnabled(true);
+
             getDeviceLocation();
 
             if (ActivityCompat.checkSelfPermission(this,
                     permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                mMap.setMyLocationEnabled(true);
                 return;
             }
         }

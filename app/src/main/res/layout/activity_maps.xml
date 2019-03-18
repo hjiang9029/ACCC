@@ -53,12 +53,13 @@
             android:choiceMode="singleChoice"
             android:divider="@android:color/transparent" />
 
-        <Button
-            android:id="@+id/darkModeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
     </android.support.v4.widget.DrawerLayout>
+
+    <ImageButton
+        android:id="@+id/darkModeButton"
+        android:layout_width="wrap_content"
+        android:src="@drawable/bulb"
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>
