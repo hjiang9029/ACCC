@@ -232,7 +232,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     LatLng parkLatLng = new LatLng(p.getLatitude(), p.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(parkLatLng);
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.tree));
                     mMap.addMarker(markerOptions);
                 }
             }
