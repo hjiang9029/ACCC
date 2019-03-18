@@ -31,6 +31,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -59,8 +60,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // Switches for whether the respective locations are marked
     // add as needed
-    private boolean parkSetting = true;
-    private boolean washroomSetting = true;
+    public static boolean parkSetting = true;
+    public static boolean washroomSetting = true;
+
+    public static ArrayList<Marker> parkMarkers = new ArrayList<>();
+    public static ArrayList<Marker> washroomsMarkers = new ArrayList<>();
 
     //#region Permissions
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -127,6 +131,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent h = new Intent(getBaseContext(), Settings.class);
+            h.putExtra("parks", parkSetting);
+            h.putExtra("washrooms", washroomSetting);
             startActivity(h);
             return true;
         }
