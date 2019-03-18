@@ -62,9 +62,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // add as needed
     public static boolean parkSetting = true;
     public static boolean washroomSetting = true;
-
     public static ArrayList<Marker> parkMarkers = new ArrayList<>();
     public static ArrayList<Marker> washroomsMarkers = new ArrayList<>();
+    public static ArrayList<String> filteredParks = new ArrayList<>();
 
     //#region Permissions
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -102,12 +102,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SEARCHED_LAT = getIntent().getDoubleExtra("SEARCHED_LAT", 0.0);
         SEARCHED_LONG = getIntent().getDoubleExtra("SEARCHED_LONG", 0.0);
 
-        // Adding to the sidebar
-        ListView lv = (ListView) findViewById(R.id.list_drawer);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1,
-                MainActivity.parkNames);
-        lv.setAdapter(adapter);
+
 
         getLocationPermission();
         initializeAutoCompleteSearch();
@@ -192,7 +187,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location!");
-                            Location currentLocation = (Location) task.getResult();
+                            Location currentLocation = null;
+                            //Location currentLocation = (Location) task.getResult();
                             LatLng markerLatlng;
                             if (currentLocation != null) {
                                 markerLatlng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
@@ -232,6 +228,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void addMarkers(LatLng origin) {
+
+        // Adding to the sidebar
+        ListView lv = (ListView) findViewById(R.id.list_drawer);
+
+        for (Park p : MainActivity.PARKS.values()) {
+            if (haversine(origin.latitude, p.latitude, origin.longitude, p.longitude) < (double) 1000) {
+                filteredParks.add(p.getName());
+            }
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1,
+                MapsActivity.filteredParks);
+        lv.setAdapter(adapter);
+
+
+
         if (parkSetting) {
             for (Park p : MainActivity.PARKS.values()) {
                 if (haversine(origin.latitude, p.latitude, origin.longitude, p.longitude) < (double) 1000) {
@@ -239,7 +252,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(parkLatLng);
                     markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.tree));
-                    mMap.addMarker(markerOptions);
+                    parkMarkers.add(mMap.addMarker(markerOptions));
                 }
             }
         }
