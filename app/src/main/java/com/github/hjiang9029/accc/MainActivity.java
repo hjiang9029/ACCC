@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static HashMap<String, Park> PARKS = new HashMap<>();
     public static HashMap<String, Washroom> WASHROOMS = new HashMap<>();
+    public static HashMap<String, DrinkingFountain> DRINKINGFOUNTAINS = new HashMap<>();
+    public static HashMap<String, ParkStructure> PARKSTRUCTURES = new HashMap<>();
+
     private double SEARCHED_LAT = 0.0;
     private double SEARCHED_LONG = 0.0;
     private String TAG = MainActivity.class.getSimpleName();
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     // URL to get contacts JSON
     private static String SERVICE_URL = "http://opendata.newwestcity.ca/downloads/parks/PARKS.json";
     private static String WASHROOM_URL = "http://opendata.newwestcity.ca/downloads/accessible-public-washrooms/WASHROOMS.json";
+    private static String DRINKING_FOUNTAINS_URL = "http://opendata.newwestcity.ca/downloads/drinking-fountains/DRINKING_FOUNTAINS.json";
+    private static String PARK_STRUCTURES_URL = "http://opendata.newwestcity.ca/downloads/park-structures/PARK_STRUCTURES.json";
     public static ArrayList<String> parkNames = new ArrayList<String>();
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
@@ -205,6 +210,121 @@ public class MainActivity extends AppCompatActivity {
 
                         Washroom newWashroom = new Washroom(name, address, category, neighbourhood, hours, latitude, longitude);
                         WASHROOMS.put(newWashroom.getName(), newWashroom);
+
+                    }
+                } catch (final JSONException e) {
+                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+
+                }
+            } else {
+                Log.e(TAG, "Couldn't get json from server.");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+
+            }
+        }
+
+
+        private void parseFountains(HttpHandler sh) {
+            // Making a request to url and getting response
+            String jsonStr = sh.makeServiceCall(DRINKING_FOUNTAINS_URL);
+
+            Log.e(TAG, "Response from url: " + jsonStr);
+
+            if (jsonStr != null) {
+                try {
+                    //JSONObject jsonObj = new JSONObject(jsonStr);
+
+                    // Getting JSON Array node
+                    JSONObject fountainJsonObj = new JSONObject(jsonStr);
+                    JSONArray fountainJsonArray = fountainJsonObj.getJSONArray("features");
+                    // looping through All Contacts
+                    for (int i = 0; i < fountainJsonArray.length(); i++) {
+
+                        JSONObject c = fountainJsonArray.getJSONObject(i);
+                        JSONObject props = c.getJSONObject("properties");
+                        JSONObject geometry = c.getJSONObject("geometry");
+                        JSONArray coordArray = geometry.getJSONArray("coordinates");
+                        String parkName = props.getString("ParkName");
+                        double latitude = coordArray.getDouble(1);
+                        double longitude = coordArray.getDouble(0);
+
+                        DrinkingFountain newWashroom = new DrinkingFountain(parkName, latitude, longitude);
+                        DRINKINGFOUNTAINS.put(newWashroom.getParkName(), newWashroom);
+
+                    }
+                } catch (final JSONException e) {
+                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+
+                }
+            } else {
+                Log.e(TAG, "Couldn't get json from server.");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+
+            }
+        }
+
+
+        private void parseParkStructures(HttpHandler sh) {
+            // Making a request to url and getting response
+            String jsonStr = sh.makeServiceCall(PARK_STRUCTURES_URL);
+
+            Log.e(TAG, "Response from url: " + jsonStr);
+
+            if (jsonStr != null) {
+                try {
+                    //JSONObject jsonObj = new JSONObject(jsonStr);
+
+                    // Getting JSON Array node
+                    JSONObject parkStructureJsonObj = new JSONObject(jsonStr);
+                    JSONArray parkStructureJsonArray = parkStructureJsonObj.getJSONArray("features");
+                    // looping through All Contacts
+                    for (int i = 0; i < parkStructureJsonArray.length(); i++) {
+
+                        JSONObject c = parkStructureJsonArray.getJSONObject(i);
+                        JSONObject props = c.getJSONObject("properties");
+                        JSONObject geometry = c.getJSONObject("geometry");
+                        JSONArray coordArray = geometry.getJSONArray("coordinates");
+                        String type = props.getString("Type");
+                        String parkName = props.getString("ParkName");
+                        double latitude = coordArray.getDouble(1);
+                        double longitude = coordArray.getDouble(0);
+
+                        ParkStructure newParkStructure = new ParkStructure(type, parkName, latitude, longitude);
+                        PARKSTRUCTURES.put(newParkStructure.getParkName(), newParkStructure);
 
                     }
                 } catch (final JSONException e) {
