@@ -2,6 +2,7 @@ package com.github.hjiang9029.accc;
 
 import android.Manifest;
 import android.Manifest.permission;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -49,10 +50,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -79,7 +82,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     //#endregion
     //#region Data variables
     private GoogleMap mMap;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final float DEFAULT_ZOOM = 15f;
     private static double SEARCHED_LAT;
     private static double SEARCHED_LONG;
@@ -89,11 +91,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
         // Side bar initialization
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout1);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout1);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, myToolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
@@ -151,9 +153,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             getDeviceLocation();
 
             if (ActivityCompat.checkSelfPermission(this,
-                    permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
+                    permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION);
             }
         }
     }
@@ -184,7 +185,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void getDeviceLocation() {
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        FusedLocationProviderClient mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         try {
             if (mLocationPermissionGranted) {
@@ -242,15 +243,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void addCloseMarkers(LatLng origin) {
         
         // Adding to the sidebar
-         ListView lv = (ListView) findViewById(R.id.list_drawer);
+         ListView lv = findViewById(R.id.list_drawer);
 
         for (Park p : MainActivity.PARKS.values()) {
-            if (haversine(origin.latitude, p.latitude, origin.longitude, p.longitude) < (double) 1000) {
-                filteredParks.add(p.getName());
+
+            double distance = haversine(origin.latitude, p.latitude, origin.longitude, p.longitude);
+            DecimalFormat dec = new DecimalFormat("0");
+
+            if (distance < (double) 1000) {
+                filteredParks.add(p.getName() + "\n" + dec.format(distance) + " m");
             }
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1,
                 MapsActivity.filteredParks);
         lv.setAdapter(adapter);
@@ -271,7 +276,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     LatLng washroomLatLng = new LatLng(w.getLatitude(), w.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(washroomLatLng);
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.restroom));
                     washroomsMarkers.add(mMap.addMarker(markerOptions));
                 }
             }
@@ -282,7 +287,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     LatLng washroomLatLng = new LatLng(ps.getLatitude(), ps.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(washroomLatLng);
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.playground));
                     parkStructureMarkers.add(mMap.addMarker(markerOptions));
                 }
             }
@@ -293,7 +298,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     LatLng washroomLatLng = new LatLng(df.getLatitude(), df.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(washroomLatLng);
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.water));
                     waterFountainMarkers.add(mMap.addMarker(markerOptions));
                 }
             }
@@ -309,18 +314,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
-            }
+        if (autocompleteFragment != null) {
+            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        }
+        if (autocompleteFragment != null) {
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(@NonNull Place place) {
+                    Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                }
 
-            @Override
-            public void onError(Status status) {
-                Log.i(TAG, "An error occurred: " + status);
-            }
-        });
+                @Override
+                public void onError(@NonNull Status status) {
+                    Log.i(TAG, "An error occurred: " + status);
+                }
+            });
+        }
     }
 
     private void moveCamera(LatLng latLng, float zoom) {
@@ -329,7 +338,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void initMap() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(MapsActivity.this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(MapsActivity.this);
+        }
     }
 
     private void getLocationPermission() {
@@ -361,8 +372,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch(requestCode) {
             case LOCATION_PERMISSION_REQUEST_CODE: {
                 if (grantResults.length > 0) {
-                    for (int i = 0; i < grantResults.length; ++i) {
-                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    for (int grantResult : grantResults) {
+                        if (grantResult != PackageManager.PERMISSION_GRANTED) {
                             mLocationPermissionGranted = false;
                             return;
                         }
@@ -432,13 +443,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (Exception e) {
             Log.d("Exception", e.toString());
         } finally {
-            iStream.close();
+            Objects.requireNonNull(iStream).close();
             urlConnection.disconnect();
         }
         return data;
     }
 
     // Private inner class that parses the JSON data from the route URL
+    @SuppressLint("StaticFieldLeak")
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>>> {
 
         // Parsing the data in non-ui thread
@@ -461,7 +473,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         protected void onPostExecute(List<List<HashMap<String,String>>> result) {
-            ArrayList points = null;
+            ArrayList points;
             PolylineOptions lineOptions = null;
             MarkerOptions markerOptions = new MarkerOptions();
 

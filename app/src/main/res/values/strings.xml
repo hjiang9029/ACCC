@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ACCC</string>
     <string name="api_key">AIzaSyCdEKLwjKJ0ubzQlQx71Wg9KxgIcY43cXw</string>
-    <string name="welcome">Where are you exploring today?</string>
+    <string name="welcome">Where are you going today?</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_nav">NavActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -10,4 +10,7 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="start">Start</string>
+    <string name="explore">Explore</string>
+    <string name="the_background_for_the_object">The background for the object.</string>
 </resources>
