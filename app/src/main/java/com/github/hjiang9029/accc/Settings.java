@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.Marker;
 
@@ -42,6 +43,10 @@ public class Settings extends AppCompatActivity {
         MapsActivity.washroomSetting = washroomBox.isChecked();
         MapsActivity.waterFountainSetting = fountainBox.isChecked();
         MapsActivity.parkStructuresSetting = parkStructureBox.isChecked();
+
+        Toast.makeText(this.getBaseContext(),"Saved",
+                Toast.LENGTH_LONG).show();
+
         finish();
     }
 }

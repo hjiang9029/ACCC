@@ -58,7 +58,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback{
 
     private static final String TAG = "MapsActivity";
 
@@ -254,13 +254,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     private void addCloseMarkers(LatLng origin) {
-        
+
         // Adding to the sidebar
          ListView lv = findViewById(R.id.list_drawer);
+         double distance = 0;
 
         for (Park p : MainActivity.PARKS.values()) {
 
-            double distance = haversine(origin.latitude, p.latitude, origin.longitude, p.longitude);
+            distance = haversine(origin.latitude, p.latitude, origin.longitude, p.longitude);
             DecimalFormat dec = new DecimalFormat("0");
 
             if (distance < (double) 1000) {
@@ -274,45 +275,50 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         lv.setAdapter(adapter);
         if (parkSetting) {
             for (Park p : MainActivity.PARKS.values()) {
-                if (haversine(origin.latitude, p.latitude, origin.longitude, p.longitude) < (double) 1000) {
+                distance = haversine(origin.latitude, p.latitude, origin.longitude, p.longitude);
+                if (distance < (double) 1000) {
                     LatLng parkLatLng = new LatLng(p.getLatitude(), p.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(parkLatLng);
                     markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.tree));
-                    parkMarkers.add(mMap.addMarker(markerOptions));
+                    parkMarkers.add(mMap.addMarker(markerOptions.title("" + (int)distance + "m away")));
                 }
             }
         }
         if (washroomSetting) {
             for (Washroom w : MainActivity.WASHROOMS.values()) {
-                if (haversine(origin.latitude, w.latitude, origin.longitude, w.longitude) < (double) 1000) {
+                distance = haversine(origin.latitude, w.latitude, origin.longitude, w.longitude);
+                if (distance < (double) 1000) {
                     LatLng washroomLatLng = new LatLng(w.getLatitude(), w.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(washroomLatLng);
                     markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.restroom));
+                    markerOptions.title("" + (int)distance + "m away");
                     washroomsMarkers.add(mMap.addMarker(markerOptions));
                 }
             }
         }
         if (parkStructuresSetting) {
             for (ParkStructure ps : MainActivity.PARKSTRUCTURES.values()) {
-                if (haversine(origin.latitude, ps.latitude, origin.longitude, ps.longitude) < (double) 1000) {
+                distance = haversine(origin.latitude, ps.latitude, origin.longitude, ps.longitude);
+                if (distance < (double) 1000) {
                     LatLng washroomLatLng = new LatLng(ps.getLatitude(), ps.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(washroomLatLng);
                     markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.playground));
-                    parkStructureMarkers.add(mMap.addMarker(markerOptions));
+                    parkStructureMarkers.add(mMap.addMarker(markerOptions.title("" + (int)distance + "m away")));
                 }
             }
         }
         if (waterFountainSetting) {
             for (DrinkingFountain df : MainActivity.DRINKINGFOUNTAINS.values()) {
+                distance = haversine(origin.latitude, df.latitude, origin.longitude, df.longitude);
                 if (haversine(origin.latitude, df.latitude, origin.longitude, df.longitude) < (double) 1000) {
                     LatLng washroomLatLng = new LatLng(df.getLatitude(), df.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(washroomLatLng);
                     markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.water));
-                    waterFountainMarkers.add(mMap.addMarker(markerOptions));
+                    waterFountainMarkers.add(mMap.addMarker(markerOptions.title("" + (int) distance + "m away")));
                 }
             }
         }
