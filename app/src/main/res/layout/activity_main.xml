@@ -69,4 +69,12 @@
         android:onClick="createMap"
         android:text="@string/explore" />
 
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/Title"
+        android:layout_marginTop="300dp"
+        android:layout_alignTop="@id/welcome"
+        android:layout_height="match_parent" />
+
 </RelativeLayout>
