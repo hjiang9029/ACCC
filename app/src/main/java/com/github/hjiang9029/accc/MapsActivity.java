@@ -31,6 +31,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -202,14 +203,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 markerLatlng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                                 mMap.addMarker(new MarkerOptions().position(markerLatlng).title("Marker"));
                                 addCloseMarkers(markerLatlng);
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
-                                mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
+                                //mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
+                                CameraPosition cam = new CameraPosition.Builder()
+                                        .target(markerLatlng)
+                                        .zoom(DEFAULT_ZOOM)
+                                        .tilt(45)
+                                        .bearing(0)
+                                        .build();
+                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cam));
                             } else {
                                 markerLatlng = new LatLng(49.201354, -122.912716);
                                 mMap.addMarker(new MarkerOptions().position(markerLatlng).title("Marker"));
                                 addCloseMarkers(markerLatlng);
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
-                                mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
+                                //mMap.moveCamera(CameraUpdateFactory.newLatLng(markerLatlng));
+                                CameraPosition cam = new CameraPosition.Builder()
+                                        .target(markerLatlng)
+                                        .zoom(DEFAULT_ZOOM)
+                                        .tilt(45)
+                                        .bearing(0)
+                                        .build();
+                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cam));
                             }
                             // Code to create a hardcoded route, only uncomment to test when necessary $$$
 //
