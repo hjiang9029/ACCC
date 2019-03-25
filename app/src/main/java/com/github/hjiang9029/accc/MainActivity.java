@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPlaceSelected(Place place) {
                 SEARCHED_LAT = place.getLatLng().latitude;
                 SEARCHED_LONG = place.getLatLng().longitude;
+
             }
 
             @Override

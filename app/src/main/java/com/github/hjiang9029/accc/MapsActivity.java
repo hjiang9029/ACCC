@@ -20,8 +20,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -249,10 +252,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-       
-
-
-
     private void addCloseMarkers(LatLng origin) {
 
         // Adding to the sidebar
@@ -273,6 +272,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 android.R.layout.simple_list_item_1,
                 MapsActivity.filteredParks);
         lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedParkName = filteredParks.get(position);
+                Intent i = new Intent(getApplicationContext(), AmenityDetailsActivity.class);
+                i.putExtra("parkName", selectedParkName);
+                startActivity(i);
+            }
+        });
+
         if (parkSetting) {
             for (Park p : MainActivity.PARKS.values()) {
                 distance = haversine(origin.latitude, p.latitude, origin.longitude, p.longitude);

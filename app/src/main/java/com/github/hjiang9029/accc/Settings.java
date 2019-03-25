@@ -32,21 +32,29 @@ public class Settings extends AppCompatActivity {
     }
 
     public void saveButton(View view) {
-        MapsActivity.parkSetting = parkBox.isChecked();
+        boolean parkChecked = parkBox.isChecked();
+        boolean washroomChecked = washroomBox.isChecked();
+        boolean fountainChecked = fountainBox.isChecked();
+        boolean parkstructureChecked = parkStructureBox.isChecked();
         for (Marker m : MapsActivity.parkMarkers) {
-            m.setVisible(parkBox.isChecked());
+            m.setVisible(parkChecked);
         }
         for (Marker m : MapsActivity.washroomsMarkers) {
-            m.setVisible(washroomBox.isChecked());
+            m.setVisible(washroomChecked);
         }
-        MapsActivity.parkSetting = parkBox.isChecked();
-        MapsActivity.washroomSetting = washroomBox.isChecked();
-        MapsActivity.waterFountainSetting = fountainBox.isChecked();
-        MapsActivity.parkStructuresSetting = parkStructureBox.isChecked();
-
+        
+        for (Marker m : MapsActivity.waterFountainMarkers) {
+            m.setVisible(fountainChecked);
+        }
+        for (Marker m : MapsActivity.parkStructureMarkers) {
+            m.setVisible(parkstructureChecked);
+        }
+        MapsActivity.parkSetting = parkChecked;
+        MapsActivity.washroomSetting = washroomChecked;
+        MapsActivity.waterFountainSetting = fountainChecked;
+        MapsActivity.parkStructuresSetting = parkstructureChecked;
         Toast.makeText(this.getBaseContext(),"Saved",
                 Toast.LENGTH_LONG).show();
-
         finish();
     }
 }
