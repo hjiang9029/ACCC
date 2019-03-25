@@ -20,8 +20,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -225,17 +228,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cam));
                             }
                             // Code to create a hardcoded route, only uncomment to test when necessary $$$
-//
-//                            LatLng origin = markerLatlng;
-//                            LatLng dest = new LatLng(SEARCHED_LAT, SEARCHED_LONG);
-//
-//                            // Getting URL to the Google Directions API
-//                            String url = createRoute(origin, dest);
-//
-//                            DownloadTask downloadTask = new DownloadTask();
-//
-//                            // Start downloading json data from Google Directions API
-//                            downloadTask.execute(url);
+
+                            LatLng origin = markerLatlng;
+                            LatLng dest = new LatLng(SEARCHED_LAT, SEARCHED_LONG);
+
+                            double distance = haversine(origin.latitude, dest.latitude, origin.longitude, dest.longitude);
+                            MarkerOptions endMarker = new MarkerOptions();
+                            endMarker.position(dest);
+                            endMarker.title("" + (int) distance + "m away");
+                            mMap.addMarker(endMarker);
+
+                            // Getting URL to the Google Directions API
+                            String url = createRoute(origin, dest);
+
+                            DownloadTask downloadTask = new DownloadTask();
+
+                            // Start downloading json data from Google Directions API
+                            downloadTask.execute(url);
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
@@ -247,10 +256,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.e(TAG, "getDeviceLocation: Security exception: " + e.getMessage());
         }
     }
-
-
-       
-
 
 
     private void addCloseMarkers(LatLng origin) {
@@ -273,6 +278,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 android.R.layout.simple_list_item_1,
                 MapsActivity.filteredParks);
         lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedParkName = filteredParks.get(position);
+                Intent i = new Intent(getApplicationContext(), AmenityDetailsActivity.class);
+                i.putExtra("parkName", selectedParkName);
+                startActivity(i);
+            }
+        });
+
         if (parkSetting) {
             for (Park p : MainActivity.PARKS.values()) {
                 distance = haversine(origin.latitude, p.latitude, origin.longitude, p.longitude);
