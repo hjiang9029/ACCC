@@ -1,5 +1,6 @@
 package com.github.hjiang9029.accc;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public static HashMap<String, DrinkingFountain> DRINKINGFOUNTAINS = new HashMap<>();
     public static HashMap<String, ParkStructure> PARKSTRUCTURES = new HashMap<>();
 
+    private static boolean redirect = true;
     private double SEARCHED_LAT = 0.0;
     private double SEARCHED_LONG = 0.0;
     private String TAG = MainActivity.class.getSimpleName();
@@ -51,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (redirect) {
+            Intent i = new Intent(MainActivity.this, SplashScreenActivity.class);
+            startActivity(i);
+            redirect = false;
+        }
+
         //lv = (ListView) findViewById(R.id.nameList);
         new GetContacts().execute();
 

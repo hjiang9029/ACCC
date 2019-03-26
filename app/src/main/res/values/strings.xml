@@ -3,6 +3,7 @@
     <string name="api_key">AIzaSyCdEKLwjKJ0ubzQlQx71Wg9KxgIcY43cXw</string>
     <string name="welcome">Where are you going today?</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_nav">NavActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

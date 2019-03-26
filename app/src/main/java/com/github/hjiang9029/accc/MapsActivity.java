@@ -86,7 +86,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     //#endregion
     //#region Data variables
     private GoogleMap mMap;
-    private static final float DEFAULT_ZOOM = 15f;
+    private static final float DEFAULT_ZOOM = 16f;
     private static double SEARCHED_LAT;
     private static double SEARCHED_LONG;
     //#endregion
