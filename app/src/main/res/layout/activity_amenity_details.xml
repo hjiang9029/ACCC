@@ -5,7 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AmenityDetailsActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#551A8B">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="421dp"
+        android:layout_height="75dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/park" />
 
     <TextView
         android:id="@+id/detail_name"
@@ -13,5 +22,8 @@
         android:layout_height="10dp"
         android:layout_weight="1"
         android:text="TextView"
-        android:textSize="28dp"/>
+        android:textSize="28dp"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"/>
 </LinearLayout>

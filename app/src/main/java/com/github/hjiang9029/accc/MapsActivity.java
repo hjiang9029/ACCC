@@ -113,8 +113,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SEARCHED_LAT = getIntent().getDoubleExtra("SEARCHED_LAT", 0.0);
         SEARCHED_LONG = getIntent().getDoubleExtra("SEARCHED_LONG", 0.0);
 
-
-
         getLocationPermission();
         initializeAutoCompleteSearch();
 
@@ -229,22 +227,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             }
                             // Code to create a hardcoded route, only uncomment to test when necessary $$$
 
-                            LatLng origin = markerLatlng;
-                            LatLng dest = new LatLng(SEARCHED_LAT, SEARCHED_LONG);
+                            if (SEARCHED_LAT != 0.0 && SEARCHED_LONG != 0.0) {
+                                LatLng origin = markerLatlng;
+                                LatLng dest = new LatLng(SEARCHED_LAT, SEARCHED_LONG);
 
-                            double distance = haversine(origin.latitude, dest.latitude, origin.longitude, dest.longitude);
-                            MarkerOptions endMarker = new MarkerOptions();
-                            endMarker.position(dest);
-                            endMarker.title("" + (int) distance + "m away");
-                            mMap.addMarker(endMarker);
+                                double distance = haversine(origin.latitude, dest.latitude, origin.longitude, dest.longitude);
+                                MarkerOptions endMarker = new MarkerOptions();
+                                endMarker.position(dest);
+                                endMarker.title("" + (int) distance + "m away");
+                                mMap.addMarker(endMarker);
 
-                            // Getting URL to the Google Directions API
-                            String url = createRoute(origin, dest);
+                                // Getting URL to the Google Directions API
+                                String url = createRoute(origin, dest);
 
-                            DownloadTask downloadTask = new DownloadTask();
+                                DownloadTask downloadTask = new DownloadTask();
 
-                            // Start downloading json data from Google Directions API
-                            downloadTask.execute(url);
+                                // Start downloading json data from Google Directions API
+                                downloadTask.execute(url);
+                            }
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
