@@ -89,6 +89,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final float DEFAULT_ZOOM = 16f;
     private static double SEARCHED_LAT;
     private static double SEARCHED_LONG;
+    private static boolean route;
     //#endregion
 
     @Override
@@ -112,6 +113,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Assign the extra variables
         SEARCHED_LAT = getIntent().getDoubleExtra("SEARCHED_LAT", 0.0);
         SEARCHED_LONG = getIntent().getDoubleExtra("SEARCHED_LONG", 0.0);
+        route = getIntent().getBooleanExtra("Route", true);
 
         getLocationPermission();
         initializeAutoCompleteSearch();
@@ -227,7 +229,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             }
                             // Code to create a hardcoded route, only uncomment to test when necessary $$$
 
-                            if (SEARCHED_LAT != 0.0 && SEARCHED_LONG != 0.0) {
+                            if (SEARCHED_LAT != 0.0 && SEARCHED_LONG != 0.0 && route) {
                                 LatLng origin = markerLatlng;
                                 LatLng dest = new LatLng(SEARCHED_LAT, SEARCHED_LONG);
 

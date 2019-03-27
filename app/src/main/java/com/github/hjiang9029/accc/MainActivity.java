@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private static boolean redirect = true;
     private double SEARCHED_LAT = 0.0;
     private double SEARCHED_LONG = 0.0;
+    private boolean route;
     private String TAG = MainActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private ListView lv;
@@ -367,10 +368,21 @@ public class MainActivity extends AppCompatActivity {
             Intent i = new Intent(this, MapsActivity.class);
             i.putExtra("SEARCHED_LAT", SEARCHED_LAT);
             i.putExtra("SEARCHED_LONG", SEARCHED_LONG);
+            i.putExtra("Route", route = true);
             startActivity(i);
         }
     }
 
+
+    public void createMapExplore(View view) {
+        if (isServicesOK()) {
+            Intent i = new Intent(this, MapsActivity.class);
+            i.putExtra("SEARCHED_LAT", SEARCHED_LAT);
+            i.putExtra("SEARCHED_LONG", SEARCHED_LONG);
+            i.putExtra("Route", route = false);
+            startActivity(i);
+        }
+    }
 
     public boolean isServicesOK() {
         Log.d(TAG, "isServicesOK: checking google services version");
